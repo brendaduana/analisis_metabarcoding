@@ -1,30 +1,56 @@
-# Metabarcoding de eDNA para mamiferos terrestres
+# Metabarcoding de eDNA para mamíferos terrestres
 
 Este repositorio documenta el flujo de trabajo bioinformático para detectar mamíferos terrestres en la UMA de Santa Cruz Nuevo, Puebla, a través del análisis de metabarcoding de DNA ambiental (eDNA).
 
 ---
 
-## Cómo está organizado el flujo
+## Contenido del repositorio
 
-Para asignar taxonomía a las secuencias de eDNA se necesita una base de secuencias de referencia del mismo fragmento que amplifican los primers. Esta base se construye con rCRUX
-Se divide en dos partes:
-**1. Base de referencia (rCRUX)**
+El flujo de trabajo se divide en cuatro grandes pasos:
 
+**1. Preparación del entorno de rCRUX y PCR *in silico* con base local `mito`**, R.
 
-El monitoreo de fauna silvestre utilizando DNA ambiental (eDNA) han sido utilizado en diversos ecosistemas.
+**2. Base de referencia con `blast_seeds()` contra la base local `core_nt`, en servidor, R.
 
-Anacapa, procesa las lecturas de eDNA y asigna taxonomía.
+**3. Procesamiento de lecturas crudas de secuenciación**, bash y R.
 
-Incluye un paquete de R (ranacapa) para conocer las diferencias de biodiversidad entre muestras.
+**4. Análisis estadísticos**, R.
 
-Las lecturas de DNA ambiental se deben comparar con secuencias de referencias para las  asignaciones taxonómicas
+El paso 1 y 2 está basado en el flujo de trabajo de [rCRUX](https://github.com/CalCOFI/rCRUX) (Curd et al., 2024), que permite construir una base de secuencias de referencia del mismo fragmento que amplifican los primers a partir de secuencias provenientes de NCBI, para asignar taxonomía a las secuencias de eDNA .
 
-Incluye una herramienta rCRUX para crear bases de datos de referencia personalizadas para el barcode elegido.
+> *Cuando un paso se aparta de la documentación oficial de una herramienta, se cita textualmente la fuente (README, código o artículo de referencia)*
 
-Anacapa procesa lecturas de una plataforma Miseq
+---
 
-1. Conserva lecturas de calidad
-2. Elimina secuencias quiméricas
-3. Asigna "Variantes de secuencias de Amplicones" (ASV), a la mejor coincidencia en la base de datos de secuencias de referencias.
+## Estructura del repositorio
 
-Emplean un algoritmo del ancestro común más bajo bayesiano para generar tanto la asignación taxonómica como una estimación de confianza para cada nivel taxonómico, hasta llegar a nivel de especie, basada en el análisis de las 100 secuencias con mayor coincidencia. 
+Cada `.md` explica un paso o un grupo de pasos y su script está en la carpeta `scripts/` con el mismo número. En cada uno se describe:
+
+1. **Qué hace:** Para qué sirve el paso dentro del flujo.
+2. **Código:** Cada comando o grupo de comandos va precedido de una explicación de por qué se usa.
+3. **Resultado:** La salida que se obtuvo.
+4. **Decisión:** Qué se decidió a partir del resultado y qué deja para el siguiente paso.
+
+---
+ 
+## Software y versiones
+ 
+| Herramienta | Versión |
+|---|---|
+| R | 4.4.0 (ucrt) |
+| Rtools | 44 |
+| rCRUX | 0.1.0.000 (commit `4c0aa9046d3636262d3f75b20d2a17f85381872c`) |
+| BLAST+ | 2.17.0+ |
+ 
+---
+
+## Uso de inteligencia artificial
+
+La verificacion del codigo y la corrección de script que no funciona tal como lo documentan los autores se apoyaron en Claude (Anthropic, 2026), un modelo de lenguaje. Todo el codigó se ejecutó y verificó por la autora.
+
+---
+
+## Referencias
+
+* Anthropic. (2026). *Claude* (versión Opus 5.5) [Modelo de lenguaje de gran tamaño]. https://claude.ai
+* Curd, E. E., Gal, L., Gallego, R., Silliman, K., Nielsen, S., & Gold, Z. (2024). rCRUX: A rapid and versatile tool for generating metabarcoding reference libraries in R. *Environmental DNA*, 6, e489. https://doi.org/10.1002/edn3.489
