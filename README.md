@@ -4,6 +4,12 @@ Este repositorio documenta el flujo de trabajo bioinformático para detectar mam
 
 ---
 
+Autora: Brenda Duana Hernández.
+Universidad Nacional Autónoma de Mexico
+Posgrado en Ciencias Biológicas
+
+---
+
 ## Contenido del repositorio
 
 El flujo de trabajo se divide en cuatro grandes pasos:
@@ -46,11 +52,11 @@ Cada `.md` explica un paso o un grupo de pasos y su script está en la carpeta `
 
 ## Uso de inteligencia artificial
 
-La verificacion del codigo y la corrección de script que no funciona tal como lo documentan los autores se apoyaron en Claude (Anthropic, 2026), un modelo de lenguaje. Todo el codigó se ejecutó y verificó por la autora.
+La verificación del código y la corrección de script que no funciona tal como lo documentan los autores se apoyaron en Claude (Anthropic, 2026), un modelo de lenguaje. Todo el código se ejecutó y verificó por la autora.
 
 ---
 
 ## Referencias
 
 * Anthropic. (2026). *Claude* (versión Opus 5.5) [Modelo de lenguaje de gran tamaño]. https://claude.ai
-* Curd, E. E., Gal, L., Gallego, R., Silliman, K., Nielsen, S., & Gold, Z. (2024). rCRUX: A rapid and versatile tool for generating metabarcoding reference libraries in R. *Environmental DNA*, 6, e489. https://doi.org/10.1002/edn3.489
+* Curd, E. E., Gal, L., Gallego, R., Silliman, K., Nielsen, S., & Gold, Z. (2024). rCRUX: A rapid and versatile tool for generating metabarcoding reference libraries in R. *Environmental DNA*, 6, e489. https://doi.org/10.1002/edn3.489 
