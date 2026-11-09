@@ -10,7 +10,7 @@ El flujo de trabajo se divide en cuatro grandes pasos:
 
 **1. Preparación del entorno de rCRUX y PCR *in silico* con base local `mito`**, R.
 
-**2. Base de referencia con `blast_seeds()` contra la base local `core_nt`, en servidor, R.
+**2. Base de referencia con `blast_seeds()` contra la base local `core_nt`**, en servidor, R.
 
 **3. Procesamiento de lecturas crudas de secuenciación**, bash y R.
 
