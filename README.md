@@ -5,7 +5,9 @@ Este repositorio documenta el flujo de trabajo bioinformático para detectar mam
 ---
 
 Autora: Brenda Duana Hernández.
+
 Universidad Nacional Autónoma de Mexico
+
 Posgrado en Ciencias Biológicas
 
 ---
