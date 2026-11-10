@@ -216,44 +216,44 @@ system('blastdbcmd -db "C:/rcrux/blast_db/mito" -entry NC_012920.1 -range 1-60')
 
 # Nota: get_seeds_remote() ---####
 # El README de rCRUX propone get_seeds_remote() para la PCR in silico sin base local.
-# Aquí se probó tal como indica el README y se corrigió un error a la vez.
-# Resultado: tres errores en el código de rCRUX, el ejemplo del README pasa dos argumentos
-# en el orden equivocado y la carpeta de salida debe existir antes. Con las cinco
-# correcciones funciona, pero la respuesta de NCBI varía entre consultas y tiene tope
-# (~1000 resultados). Detalle y salidas: README, "Nota: la vía remota con get_seeds_remote()".
+# El ejemplo del README no corre tal como viene: el código de rCRUX (commit 4c0aa904)
+# tiene tres errores y el ejemplo necesita dos ajustes más. Abajo están las cinco
+# correcciones y la corrida que funciona. Explicación: 01-setup-database.md,
+# "Nota: la vía remota con get_seeds_remote()".
 #
 # El bloque va dentro de if (FALSE) para que NO se ejecute al correr el script completo:
-# cada consulta a NCBI tarda de 4 a 20 minutos. Para repetir las pruebas, correr las líneas
+# cada consulta a NCBI tarda de 4 a 20 minutos. Para correrlo, ejecutar las líneas
 # una por una, en una sesión de R limpia.
 
 if (FALSE) {
   
   library(rCRUX)
-  forward_primer_seq = "TAGAACAGGCTCCTCTAG"
-  reverse_primer_seq = "TTAGATACCCCACTATGC"
-  output_directory_path <- "C:/rcrux/outputs_remote/12S_V5F1_remote"
-  metabarcode_name <- "12S_V5F1"
+  
+  # Rutas y primers del ejemplo del README (solo cambian las rutas)
+  forward_primer_seq      <- "TAGAACAGGCTCCTCTAG"
+  reverse_primer_seq      <- "TTAGATACCCCACTATGC"
+  output_directory_path   <- "C:/rcrux/outputs_remote/12S_V5F1_remote"
+  metabarcode_name        <- "12S_V5F1"
   accession_taxa_sql_path <- "C:/rcrux/taxonomizr_db/accessionTaxa.sql"
   
-  # Prueba 1. Ejemplo del README tal cual
-  # Error: inherits(response): el argumento "what" está ausente (igual al issue #37)
-  get_seeds_remote(forward_primer_seq, reverse_primer_seq, metabarcode_name,
-                   output_directory_path, accession_taxa_sql_path,
-                   organism = c("1476529", "7776"), return_table = FALSE)
+  # Las correcciones 1 a 3 se aplican en cada sesión nueva de R, después de
+  # library(rCRUX): assignInNamespace() reemplaza la función dentro del paquete
+  # sin modificar los archivos instalados.
   
-  # Corrección 1: iterative_primer_search(), inherits(x) == "try-error" -> inherits(x, "try-error")
+  # Corrección 1: iterative_primer_search()
+  # R/iterative_primer_search.r: "if (inherits(response) == "try-error") {"
+  # a inherits() le falta el argumento what -> inherits(response, "try-error")
   txt <- deparse(rCRUX::iterative_primer_search)
   txt <- gsub('inherits\\((\\w+)\\) == "try-error"', 'inherits(\\1, "try-error")', txt)
   fixed_iterative_primer_search <- eval(parse(text = txt))
   environment(fixed_iterative_primer_search) <- asNamespace("rCRUX")
   assignInNamespace("iterative_primer_search", fixed_iterative_primer_search, ns = "rCRUX")
   
-  # Prueba 2. Error: objeto 'num_primers' no encontrado
-  get_seeds_remote(forward_primer_seq, reverse_primer_seq, metabarcode_name,
-                   output_directory_path, accession_taxa_sql_path,
-                   organism = c("1476529", "7776"), return_table = FALSE)
-  
-  # Corrección 2: primer_search(), num_primers fuera del if
+  # Corrección 2: primer_search()
+  # R/modifiedPrimerTreeFunctions.R: "primers = enumerate_primers(forward, reverse)"
+  # y "num_primers = nrow(primers)" están dentro de
+  # "if (missing(forward) || missing(reverse)) {", que no se ejecuta en el uso normal.
+  # Se reescribe la función igual a la original, con esas dos líneas fuera del if.
   fixed_primer_search <- function(forward, reverse, num_permutations = 25,
                                   ..., .parallel = FALSE, .progress = 'none') {
     if (missing(forward) || missing(reverse)) {
@@ -277,12 +277,9 @@ if (FALSE) {
   environment(fixed_primer_search) <- asNamespace("rCRUX")
   assignInNamespace("primer_search", fixed_primer_search, ns = "rCRUX")
   
-  # Prueba 3. NCBI responde; error: Column 'forward_primer_seq' not found in '.data'
-  get_seeds_remote(forward_primer_seq, reverse_primer_seq, metabarcode_name,
-                   output_directory_path, accession_taxa_sql_path,
-                   organism = c("1476529", "7776"), return_table = FALSE)
-  
-  # Corrección 3: filter_primer_hits(), usar los primers que recibe la función
+  # Corrección 3: filter_primer_hits()
+  # R/filter_primer_hits.r: "nchar(.data$forward_primer_seq) - nchar(.data$reverse_primer_seq))"
+  # busca una columna que no existe; se usan los primers que recibe la función
   txt <- deparse(rCRUX::filter_primer_hits)
   txt <- gsub(".data$forward_primer_seq", "forward_primer_seq", txt, fixed = TRUE)
   txt <- gsub(".data$reverse_primer_seq", "reverse_primer_seq", txt, fixed = TRUE)
@@ -290,8 +287,14 @@ if (FALSE) {
   environment(fixed_filter_primer_hits) <- asNamespace("rCRUX")
   assignInNamespace("filter_primer_hits", fixed_filter_primer_hits, ns = "rCRUX")
   
-  # Prueba 4. Corrección 4 (argumentos nombrados)
-  # Error al guardar: no se puede abrir la conexión (la carpeta de salida no existe)
+  # Corrección 5: crear antes la carpeta de salida
+  # R/get_seeds_remote.R: "dir.create(out, showWarnings = FALSE)" crea la subcarpeta
+  # sin recursive = TRUE, así que falla si la carpeta de salida no existe
+  dir.create(output_directory_path, recursive = TRUE, showWarnings = FALSE)
+  
+  # Corrección 4: argumentos nombrados
+  # El README pasa metabarcode_name antes que output_directory_path; la función
+  # (R/get_seeds_remote.R) los define en el orden contrario
   get_seeds_remote(forward_primer_seq      = forward_primer_seq,
                    reverse_primer_seq      = reverse_primer_seq,
                    output_directory_path   = output_directory_path,
@@ -300,25 +303,19 @@ if (FALSE) {
                    organism = c("1476529", "7776"),
                    return_table = FALSE)
   
-  # Prueba 5. Corrección 5: crear la carpeta antes
-  # Guarda 3 archivos, pero pierde el grupo 7776:
-  # "parse_primer_hits returned an object that is not a dataframe"
-  dir.create(output_directory_path, recursive = TRUE, showWarnings = FALSE)
-  get_seeds_remote(forward_primer_seq      = forward_primer_seq,
-                   reverse_primer_seq      = reverse_primer_seq,
-                   output_directory_path   = output_directory_path,
-                   metabarcode_name        = metabarcode_name,
-                   accession_taxa_sql_path = accession_taxa_sql_path,
-                   organism = c("1476529", "7776"),
-                   return_table = FALSE)
+  # Revisar que no se perdió ningún grupo de organism
   warnings()
+  # "parse_primer_hits returned an object that is not a dataframe"
+  # "This occurred while processing organism 7776" -> se perdió el grupo 7776
+  
   res <- read.csv(file.path(output_directory_path, "get_seeds_local",
                             "12S_V5F1_filtered_get_seeds_remote_output_with_taxonomy.csv"))
   nrow(res)                          # 102
   length(unique(res$species))        # 30
   table(res$class, useNA = "always") # Hyperoartia 101, NA 1
   
-  # Prueba 6. Consulta directa a NCBI solo para 7776 (código propio de diagnóstico)
+  # Consulta directa a NCBI solo para 7776 (código propio de diagnóstico,
+  # no es parte del flujo de rCRUX): revisa la página que devuelve NCBI
   raw_response_list <- rCRUX:::primer_search(forward  = forward_primer_seq,
                                              reverse  = reverse_primer_seq,
                                              organism = "7776",
@@ -330,4 +327,6 @@ if (FALSE) {
   length(gregexpr("<pre", html_text)[[1]])   # 1000
   p <- rCRUX:::parse_primer_hits(r1)
   nrow(p)                                    # 1000 (tope)
+  # La misma consulta que se perdió arriba, aquí sí se lee: la respuesta de NCBI
+  # varía entre consultas, y 1000 exactos indica un tope de resultados
 }
