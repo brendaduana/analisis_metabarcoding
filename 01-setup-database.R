@@ -121,7 +121,6 @@ rCRUX::has_blast_plus_binaries()
 
 dir.create("C:/rcrux/temp_downloads", showWarnings = FALSE)
 dir.create("C:/rcrux/taxonomizr_db", recursive = TRUE)
-dir.create("C:/rcrux/outputs", recursive = TRUE)
 
 # 4.2 Cargar taxonomizr y definir dónde quedará la base
 "taxonomizr" %in% rownames(installed.packages()) # TRUE
