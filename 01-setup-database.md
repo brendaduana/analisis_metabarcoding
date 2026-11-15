@@ -8,7 +8,7 @@ En estos cinco pasos se prepara todo lo que rCRUX necesita antes de correr una P
 4. **`accessionTaxa.sql`:** la base de taxonomía que traduce los números de acceso de NCBI a su clasificación taxonómica.
 5. **`mito`:** la base BLAST de secuencias mitocondriales en la que se buscan los primers.
 
-Script asociado: `scripts/01_setup.R`.
+Script asociado: `scripts/01-setup-database.R`.
 
 ---
 
