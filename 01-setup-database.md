@@ -282,7 +282,6 @@ Todo el proyecto vive en `C:/rcrux`, con una carpeta por tipo de contenido:
 
 - `temp_downloads` guarda archivos temporales de SQLite durante la construccion (paso 4.5)
 - `taxonomizr_db` guarda las descargas y la base de taxonomía
-- `outputs` guarda los resultados del pipeline.
 
 `showWarnings = FALSE` evita un aviso si la carpeta ya existe, y `recursive = TRUE` crea también `C:/rcrux` si todavía no existe.
 
@@ -290,8 +289,6 @@ Todo el proyecto vive en `C:/rcrux`, con una carpeta por tipo de contenido:
 dir.create("C:/rcrux/temp_downloads", showWarnings = FALSE)
 
 dir.create("C:/rcrux/taxonomizr_db", recursive = TRUE)
-
-dir.create("C:/rcrux/outputs", recursive = TRUE)
 ```
 
 ### 4.2 Cargar taxonomizr y definir dónde quedará la base
@@ -328,7 +325,7 @@ Así se comprueba que hacerlo a mano equivale al método oficial. Aquí `read.no
 
 ### 4.3 Descargar la taxonomía de NCBI
 
-`taxdump.tar.gz` contiene la jerarquía taxonómica (`nodes.dmp`) y los nombres (`names.dmp`). Se descargó desde el navegadorComo la descarga automática falló cuatro veces, se descargó desde el navegador por [HTTPS](https://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz) y se guardó en `C:/rcrux/taxonomizr_db/`. `untar()` lo descomprime y `list.files()` muestra qué quedó en la carpeta.
+`taxdump.tar.gz` contiene la jerarquía taxonómica (`nodes.dmp`) y los nombres (`names.dmp`). Como la descarga automática falló cuatro veces, se descargó desde el navegador por [HTTPS](https://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz) y se guardó en `C:/rcrux/taxonomizr_db/`. `untar()` lo descomprime y `list.files()` muestra qué quedó en la carpeta.
 
 ```r
 untar("C:/rcrux/taxonomizr_db/taxdump.tar.gz",
