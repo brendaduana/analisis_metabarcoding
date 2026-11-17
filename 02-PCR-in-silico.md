@@ -2,7 +2,7 @@
 
 Este documento corresponde al **Paso 6** del pipeline, es la continuación del [`01-setup-database.md`](01-setup-database.md), que documenta los pasos de preparación del equipo y de la base de datos.
 
-Script asociado: [`scripts/02_pcr_in_silico.R`](scripts/02_pcr_in_silico.R)
+Script asociado: [`02_pcr_in_silico.R`](02_pcr_in_silico.R)
 
 **Qué hace:** Simula en la computadora una PCR con cada set de primers para saber cuántas especies y cuáles podría amplificar. No se usa laboratorio ni DNA real: el programa busca, en bases de datos de secuencias, dónde "se pegarían" los primers.
 
