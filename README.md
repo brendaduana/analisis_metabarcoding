@@ -27,7 +27,7 @@ El flujo de trabajo se divide en cuatro grandes pasos:
 **3. Procesamiento de lecturas crudas de secuenciación**, bash y R [Flujo generado con datos de prueba].
 -  [`03-data.md`](03-data.md)
 -  [`04-quality-control.md`](04-quality-control.md)
--  [`05-cutadapat.md`](05-cutadapat.md)
+-  [`05-cutadapat.md`](05-cutadapt.md)
 -  [`06-dada2.md`](06-dada2.md)
 
 **4. Análisis estadísticos**, R [Análisis por generar].
