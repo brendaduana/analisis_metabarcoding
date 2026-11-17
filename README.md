@@ -52,7 +52,7 @@ Cada `.md` explica un paso o un grupo de pasos y su script está en la carpeta `
  
 ---
 
-## Uso de inteligencia artificial
+### Uso de inteligencia artificial
 
 La verificación del código y la corrección de script que no funciona tal como lo documentan los autores se apoyaron en Claude (Anthropic, 2026), un modelo de lenguaje. Todo el código se ejecutó y verificó por la autora.
 
